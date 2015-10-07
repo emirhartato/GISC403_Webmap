@@ -7,7 +7,9 @@
 		<link rel="stylesheet" href="css/MarkerCluster.css" />
 		<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
 		<link rel="stylesheet" type="text/css" href="css/own_style.css">
-		<link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />	
+		<link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />
+        <link rel="stylesheet" href="css/leaflet.draw.css" />
+        <link rel="stylesheet" href="css/leaflet.measurecontrol.css" />		
 		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
 		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
 		<script src="js/leaflet-hash.js"></script>
@@ -28,7 +30,7 @@
 		<script src="data/exp_MineralExtraction.js"></script>
 		<script>
 		var map = L.map('map', {
-			zoomControl:true, maxZoom:19
+			zoomControl:true, maxZoom:28
 		}).fitBounds([[-45.1908902269,167.549981669],[-41.585812023,176.294445361]]);
 		var hash = new L.Hash(map);
 		var additional_attrib = 'Last update 05 August 2015 - Data source <a href="http://ecan.govt.nz" target ="_blank">Environment Canterbury</a><br>';
@@ -63,7 +65,7 @@
 					radius: 4.0,
 					fillColor: '#fb9a99',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -85,7 +87,7 @@
 					radius: 4.0,
 					fillColor: '#7c3fc1',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -107,7 +109,7 @@
 					radius: 4.0,
 					fillColor: '#33a02c',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -129,7 +131,7 @@
 					radius: 4.0,
 					fillColor: '#787878',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -151,7 +153,7 @@
 					radius: 4.0,
 					fillColor: '#a65454',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -173,7 +175,7 @@
 					radius: 4.0,
 					fillColor: '#31bbff',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -195,7 +197,7 @@
 					radius: 4.0,
 					fillColor: '#e70000',
 					color: '#000000',
-					weight: 1,
+					weight: 0,
 					opacity: 1.0,
 					fillOpacity: 1.0
 				})
@@ -222,21 +224,14 @@
             position: 'topright',
             text: 'Find',
 		});
-		osmGeocoder.addTo(map);
-		var legend = L.control({position: 'bottomright'});
-		legend.onAdd = function (map) {
-			var div = L.DomUtil.create('div', 'info legend');
-			div.innerHTML = "<table><tr><td><img src='bullet7.svg'></img></td><td>Mineral Extraction</td></tr><tr><td><img src='bullet6.svg'></img></td><td>Liquid Agrichemical</td></tr><tr><td><img src='bullet5.svg'></img></td><td>Intensive Farming</td></tr><tr><td><img src='bullet4.svg'></img></td><td>Industrial</td></tr><tr><td><img src='bullet3.svg'></img></td><td>Farm Waste</td></tr><tr><td><img src='bullet2.svg'></img></td><td>Contaminated Water</td></tr><tr><td><img src='bullet1.svg'></img></td><td>Burning Vegetation</td></tr></table>";
-    		return div;
-		};
-		legend.addTo(map);
+		
 	var baseMaps = {
 		'OSM Standard': basemap_0,
 		'OSM Black & White': basemap_1,
 		'Stamen Toner': basemap_2,
 		'MapQuestOpen OSM': basemap_3,
 		'MapQuestOpen Aerial': basemap_4};
-		L.control.layers(baseMaps,{"BurningVegetation": cluster_groupBurningVegetationJSON,"ContaminatedWater": cluster_groupContaminatedWaterJSON,"FarmWaste": cluster_groupFarmWasteJSON,"Industrial": cluster_groupIndustrialJSON,"IntensiveFarming": cluster_groupIntensiveFarmingJSON,"LiquidAgrichemical": cluster_groupLiquidAgrichemicalJSON,"MineralExtraction": cluster_groupMineralExtractionJSON},{collapsed:false}).addTo(map);
+		L.control.layers(baseMaps,{'<img src="legend/bullet1.svg" /> Burning Vegetation': cluster_groupBurningVegetationJSON,'<img src="legend/bullet2.svg" /> Contaminated Water': cluster_groupContaminatedWaterJSON,'<img src="legend/bullet3.svg" /> Farm Waste': cluster_groupFarmWasteJSON,'<img src="legend/bullet4.svg" /> Industrial': cluster_groupIndustrialJSON,'<img src="legend/bullet5.svg" /> Intensive Farming': cluster_groupIntensiveFarmingJSON,'<img src="legend/bullet6.svg" /> Liquid Agrichemical': cluster_groupLiquidAgrichemicalJSON,'<img src="legend/bullet7.svg" /> Mineral Extraction': cluster_groupMineralExtractionJSON},{collapsed:false}).addTo(map);
 		function updateOpacity(value) {
 	}
 		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
