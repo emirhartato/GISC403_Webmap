@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Webmap</title>
+		<meta charset="utf-8" />
+		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+		<link rel="stylesheet" href="css/MarkerCluster.css" />
+		<link rel="stylesheet" href="css/MarkerCluster.Default.css" />
+		<link rel="stylesheet" type="text/css" href="css/own_style.css">
+		<link rel="stylesheet" href="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.css" />	
+		<script src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+		<script src="js/leaflet-hash.js"></script>
+		<script src="js/Autolinker.min.js"></script>
+		<script src="http://k4r573n.github.io/leaflet-control-osm-geocoder/Control.OSMGeocoder.js"></script>
+		<script src="js/leaflet.markercluster.js"></script>
+		<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	</head>
+	<body>
+		<div id="map"></div>
+		<input id="slide" type="range" min="0" max="1" step="0.1" value="1" onchange="updateOpacity(this.value)">
+		<script src="data/exp_BurningVegetation.js"></script>
+		<script src="data/exp_ContaminatedWater.js"></script>
+		<script src="data/exp_FarmWaste.js"></script>
+		<script src="data/exp_Industrial.js"></script>
+		<script src="data/exp_IntensiveFarming.js"></script>
+		<script src="data/exp_LiquidAgrichemical.js"></script>
+		<script src="data/exp_MineralExtraction.js"></script>
+		<script>
+		var map = L.map('map', {
+			zoomControl:true, maxZoom:19
+		}).fitBounds([[-45.1908902269,167.549981669],[-41.585812023,176.294445361]]);
+		var hash = new L.Hash(map);
+		var additional_attrib = 'Last update 05 August 2015 - Data source <a href="http://ecan.govt.nz" target ="_blank">Environment Canterbury</a><br>';
+		var feature_group = new L.featureGroup([]);
+		var raster_group = new L.LayerGroup([]);
+		var basemap_0 = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + 'Basemap &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});	
+		basemap_0.addTo(map);
+		var basemap_1 = L.tileLayer('http://{s}.www.toolserver.org/tiles/bw-mapnik/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + '&copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
+		var basemap_2 = L.tileLayer('http://a.tile.stamen.com/toner/{z}/{x}/{y}.png', { 
+			attribution: additional_attrib + 'Map tiles by <a href="http://stamen.com">Stamen Design</a>, <a href="http://creativecommons.org/licenses/by/3.0">CC BY 3.0</a> &mdash; Map data: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
+		var basemap_3 = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/map/{z}/{x}/{y}.jpeg', { 
+			attribution: additional_attrib + 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Map data: &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors,<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>'
+		});
+		var basemap_4 = L.tileLayer('http://otile1.mqcdn.com/tiles/1.0.0/sat/{z}/{x}/{y}.jpg', { 
+			attribution: additional_attrib + 'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; Portions Courtesy NASA/JPL-Caltech and U.S. Depart. of Agriculture, Farm Service Agency'
+		});	
+		var layerOrder=new Array();
+		function pop_MineralExtraction(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">HolderName</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">PermitType</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">legend_ico</th><td>' + Autolinker.link(String(feature.properties['legend_ico'])) + '</td></tr><tr><th scope="row">legend_exp</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_MineralExtractionJSON = new L.geoJson(exp_MineralExtraction,{
+			onEachFeature: pop_MineralExtraction,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#fb9a99',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupMineralExtractionJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupMineralExtractionJSON.addLayer(exp_MineralExtractionJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupMineralExtractionJSON.addTo(map);
+		function pop_LiquidAgrichemical(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_LiquidAgrichemicalJSON = new L.geoJson(exp_LiquidAgrichemical,{
+			onEachFeature: pop_LiquidAgrichemical,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#7c3fc1',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupLiquidAgrichemicalJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupLiquidAgrichemicalJSON.addLayer(exp_LiquidAgrichemicalJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupLiquidAgrichemicalJSON.addTo(map);
+		function pop_IntensiveFarming(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_IntensiveFarmingJSON = new L.geoJson(exp_IntensiveFarming,{
+			onEachFeature: pop_IntensiveFarming,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#33a02c',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupIntensiveFarmingJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupIntensiveFarmingJSON.addLayer(exp_IntensiveFarmingJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupIntensiveFarmingJSON.addTo(map);
+		function pop_Industrial(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_IndustrialJSON = new L.geoJson(exp_Industrial,{
+			onEachFeature: pop_Industrial,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#787878',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupIndustrialJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupIndustrialJSON.addLayer(exp_IndustrialJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupIndustrialJSON.addTo(map);
+		function pop_FarmWaste(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_FarmWasteJSON = new L.geoJson(exp_FarmWaste,{
+			onEachFeature: pop_FarmWaste,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#a65454',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupFarmWasteJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupFarmWasteJSON.addLayer(exp_FarmWasteJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupFarmWasteJSON.addTo(map);
+		function pop_ContaminatedWater(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_ContaminatedWaterJSON = new L.geoJson(exp_ContaminatedWater,{
+			onEachFeature: pop_ContaminatedWater,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#31bbff',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupContaminatedWaterJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupContaminatedWaterJSON.addLayer(exp_ContaminatedWaterJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupContaminatedWaterJSON.addTo(map);
+		function pop_BurningVegetation(feature, layer) {					
+			var popupContent = '<table><tr><th scope="row">Holder Name</th><td>' + Autolinker.link(String(feature.properties['HolderName'])) + '</td></tr><tr><th scope="row">Permit Type</th><td>' + Autolinker.link(String(feature.properties['PermitType'])) + '</td></tr><tr><th scope="row">Location</th><td>' + Autolinker.link(String(feature.properties['Location'])) + '</td></tr><tr><th scope="row">Link</th><td>' + Autolinker.link(String(feature.properties['Link'])) + '</td></tr><tr><th scope="row">Consent</th><td>' + Autolinker.link(String(feature.properties['legend_exp'])) + '</td></tr></table>';
+			layer.bindPopup(popupContent);
+		}
+
+		var exp_BurningVegetationJSON = new L.geoJson(exp_BurningVegetation,{
+			onEachFeature: pop_BurningVegetation,
+			pointToLayer: function (feature, latlng) {  
+				return L.circleMarker(latlng, {
+					radius: 4.0,
+					fillColor: '#e70000',
+					color: '#000000',
+					weight: 1,
+					opacity: 1.0,
+					fillOpacity: 1.0
+				})
+			}
+		});
+		var cluster_groupBurningVegetationJSON= new L.MarkerClusterGroup({showCoverageOnHover: false});
+		cluster_groupBurningVegetationJSON.addLayer(exp_BurningVegetationJSON);
+		//add comment sign to hide this layer on the map in the initial view.
+		cluster_groupBurningVegetationJSON.addTo(map);
+
+		feature_group.addTo(map);
+		var title = new L.Control();
+		title.onAdd = function (map) {
+			this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			this.update();
+			return this._div;
+		};
+		title.update = function () {
+			this._div.innerHTML = '<h2>Canterbury Consent Activities</h2>Consent activities in Canterbury region which affect the environment'
+		};
+		title.addTo(map);
+		var osmGeocoder = new L.Control.OSMGeocoder({
+            collapsed: false,
+            position: 'topright',
+            text: 'Find',
+		});
+		osmGeocoder.addTo(map);
+		var legend = L.control({position: 'bottomright'});
+		legend.onAdd = function (map) {
+			var div = L.DomUtil.create('div', 'info legend');
+			div.innerHTML = "<table><tr><td><img src='bullet7.svg'></img></td><td>Mineral Extraction</td></tr><tr><td><img src='bullet6.svg'></img></td><td>Liquid Agrichemical</td></tr><tr><td><img src='bullet5.svg'></img></td><td>Intensive Farming</td></tr><tr><td><img src='bullet4.svg'></img></td><td>Industrial</td></tr><tr><td><img src='bullet3.svg'></img></td><td>Farm Waste</td></tr><tr><td><img src='bullet2.svg'></img></td><td>Contaminated Water</td></tr><tr><td><img src='bullet1.svg'></img></td><td>Burning Vegetation</td></tr></table>";
+    		return div;
+		};
+		legend.addTo(map);
+	var baseMaps = {
+		'OSM Standard': basemap_0,
+		'OSM Black & White': basemap_1,
+		'Stamen Toner': basemap_2,
+		'MapQuestOpen OSM': basemap_3,
+		'MapQuestOpen Aerial': basemap_4};
+		L.control.layers(baseMaps,{"BurningVegetation": cluster_groupBurningVegetationJSON,"ContaminatedWater": cluster_groupContaminatedWaterJSON,"FarmWaste": cluster_groupFarmWasteJSON,"Industrial": cluster_groupIndustrialJSON,"IntensiveFarming": cluster_groupIntensiveFarmingJSON,"LiquidAgrichemical": cluster_groupLiquidAgrichemicalJSON,"MineralExtraction": cluster_groupMineralExtractionJSON},{collapsed:false}).addTo(map);
+		function updateOpacity(value) {
+	}
+		L.control.scale({options: {position: 'bottomleft',maxWidth: 100,metric: true,imperial: false,updateWhenIdle: false}}).addTo(map);
+	</script>
+</body>
+</html>
